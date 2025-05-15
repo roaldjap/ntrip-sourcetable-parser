@@ -1,0 +1,26 @@
+# Node dependencies
+node_modules/
+
+# TypeScript compiled output
+dist/
+
+# Documentation output
+docs/
+
+# Optional logs
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# TypeScript project files
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*
+
+# IDE settings
+.vscode/
+.idea/
