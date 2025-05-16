@@ -26,7 +26,7 @@ npm install ntrip-sourcetable-parser
 🚀 Usage & Example
 
 ```ts
-import { fetchSourcetable } from 'ntrip-sourcetable-parser'
+import { ntripSourcetableParser } from 'ntrip-sourcetable-parser'
 
 const options = {
   host: 'positionz-rt.linz.govt.nz',
