@@ -1,48 +1,80 @@
-import * as https from 'https';
+import * as https from 'https'
 
 /**
  * GNSS mountpoint information parsed from an NTRIP sourcetable.
+ *
+ * @property mountpoint   - Name of the mountpoint
+ * @property format       - Format (e.g. RTCM 3.2)
+ * @property formatDetails- List of messages (e.g. 1004(1),1006(10))
+ * @property carrier      - Carrier phase information
+ * @property navSystem    - Navigation system (e.g. GPS+GLO)
+ * @property network      - Network name
+ * @property country      - Country code
+ * @property latitude     - Latitude in decimal degrees
+ * @property longitude    - Longitude in decimal degrees
+ * @property nmea         - Whether NMEA is required
+ * @property authentication - Whether authentication is required
+ * @property fee          - Whether there's a usage fee
+ * @property bitrate      - Bitrate in bps
  */
 export interface Mountpoint {
   /** Name of the mountpoint */
-  mountpoint: string;
+  mountpoint: string
   /** Format (e.g. RTCM 3.2) */
-  format: string;
+  format: string
   /** List of messages (e.g. 1004(1),1006(10)) */
-  formatDetails: string;
+  formatDetails: string
   /** Carrier phase information */
-  carrier: string;
+  carrier: string
   /** Navigation system (e.g. GPS+GLO) */
-  navSystem: string;
+  navSystem: string
   /** Network name */
-  network: string;
+  network: string
   /** Country code */
-  country: string;
+  country: string
   /** Latitude in decimal degrees */
-  latitude: number;
+  latitude: number
   /** Longitude in decimal degrees */
-  longitude: number;
+  longitude: number
   /** Whether NMEA is required */
-  nmea: boolean;
+  nmea: boolean
   /** Whether authentication is required */
-  authentication: boolean;
+  authentication: boolean
   /** Whether there's a usage fee */
-  fee: boolean;
+  fee: boolean
   /** Bitrate in bps */
-  bitrate: number;
+  bitrate: number
 }
 
+/**
+ * Configuration options for the NTRIP sourcetable parser.
+ *
+ * @property host - NTRIP caster hostname (required)
+ * @property port - NTRIP caster port (required)
+ * @property username - Optional: username for authentication
+ * @property password - Optional: password for authentication
+ * @property position - Optional: position for VRS in the format { lat, lon }
+ * @property version - Optional: NTRIP version ("1.0" or "2.0", default: "2.0")
+ */
+export interface NtripConfig {
+  host: string
+  port: number
+  username?: string
+  password?: string
+  position?: { lat: number; lon: number }
+  version?: '1.0' | '2.0'
+}
 
 /**
  * Parses raw sourcetable text into a list of mountpoint objects.
  */
 function parseSourcetable(data: string): Mountpoint[] {
-  const lines = data.split('\n');
-  const mountpoints: Mountpoint[] = [];
+  const lines = data.split('\n')
+  const mountpoints: Mountpoint[] = []
 
-  lines.forEach(line => {
+  lines.forEach((line) => {
     if (line.startsWith('STR;')) {
-      const fields = line.split(';');
+      const fields = line.split(';')
       mountpoints.push({
         mountpoint: fields[1],
         format: fields[2],
@@ -56,14 +88,13 @@ function parseSourcetable(data: string): Mountpoint[] {
         nmea: fields[6] === 'Y',
         authentication: fields[7] === 'Y',
         fee: fields[8] === 'Y',
-        bitrate: parseInt(fields[10], 10) || 0
-      });
+        bitrate: parseInt(fields[10], 10) || 0,
+      })
     }
-  });
+  })
 
-  return mountpoints;
+  return mountpoints
 }
-
 
 /**
  * Fetches and parses the sourcetable from an NTRIP caster.
@@ -77,32 +108,41 @@ function parseSourcetable(data: string): Mountpoint[] {
  * @returns Promise resolving to a list of mountpoints
  */
 export function ntripSourcetableParser(
-  host: string,
-  port: number,
-  username?: string,
-  password?: string,
-  position?: { lat: number; lon: number },
-  version: '1.0' | '2.0' = '2.0'
+  options: NtripConfig
 ): Promise<Mountpoint[]> {
+  const { host, port, username, password, position, version = '2.0' } = options
+
+  // Validate required options
+  if (!host || typeof host !== 'string') {
+    return Promise.reject(
+      new Error('NTRIP host is required and must be a string.')
+    )
+  }
+  if (!port || typeof port !== 'number') {
+    return Promise.reject(
+      new Error('NTRIP port is required and must be a number.')
+    )
+  }
+
   return new Promise((resolve, reject) => {
     const headers: Record<string, string> = {
       'User-Agent': 'NTRIP Node.js Client',
-    };
+    }
 
     // Set NTRIP version-specific headers
     if (version === '2.0') {
-      headers['Ntrip-Version'] = 'Ntrip/2.0';
+      headers['Ntrip-Version'] = 'Ntrip/2.0'
     }
 
     // Add Authorization header if username and password are provided
     if (username && password) {
-      const auth = Buffer.from(`${username}:${password}`).toString('base64');
-      headers['Authorization'] = `Basic ${auth}`;
+      const auth = Buffer.from(`${username}:${password}`).toString('base64')
+      headers['Authorization'] = `Basic ${auth}`
     }
 
     // Add position header if provided
     if (position) {
-      headers['Ntrip-Position'] = `${position.lat},${position.lon}`;
+      headers['Ntrip-Position'] = `${position.lat},${position.lon}`
     }
 
     const options: https.RequestOptions = {
@@ -111,22 +151,22 @@ export function ntripSourcetableParser(
       path: '/',
       method: 'GET',
       headers,
-    };
+    }
 
-    const req = https.request(options, res => {
-      let data = '';
-      res.on('data', chunk => (data += chunk));
+    const req = https.request(options, (res) => {
+      let data = ''
+      res.on('data', (chunk) => (data += chunk))
       res.on('end', () => {
         try {
-          const mountpoints = parseSourcetable(data);
-          resolve(mountpoints);
+          const mountpoints = parseSourcetable(data)
+          resolve(mountpoints)
         } catch (err) {
-          reject(err);
+          reject(err)
         }
-      });
-    });
+      })
+    })
 
-    req.on('error', err => reject(err));
-    req.end();
-  });
+    req.on('error', (err) => reject(err))
+    req.end()
+  })
 }

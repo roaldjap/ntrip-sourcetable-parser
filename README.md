@@ -24,39 +24,118 @@ npm install ntrip-sourcetable-parser
 ```
 
 🚀 Usage & Example
+
 ```ts
-import { fetchSourcetable } from 'ntrip-sourcetable-parser';
+import { fetchSourcetable } from 'ntrip-sourcetable-parser'
 
-const host = 'positionz-rt.linz.govt.nz';
-const port = 2101;
+const options = {
+  host: 'positionz-rt.linz.govt.nz',
+  port: 2101,
+}
 
-fetchSourcetable(host, port)
+// Example #1 - Then...Catch
+ntripSourcetableParser(options)
   .then((mountpoints) => {
-    console.log(mountpoints);
+    console.log(mountpoints)
   })
-  .catch(console.error);
+  .catch(console.error)
+
+// Example #2 - Async/Await
+async function fetchMountpoints() {
+  try {
+    const mountpoints = await ntripSourcetableParser(options)
+    console.log(mountpoints)
+  } catch (error) {
+    console.error(error)
+  }
+}
+fetchMountpoints()
+
+// Example #3 - Filtering Results
+async function fetchAndFilterMountpoints() {
+  try {
+    const mountpoints = await ntripSourcetableParser(options)
+    const freeMountpoints = mountpoints.filter((mp) => !mp.fee)
+    console.log('Free mountpoints:', freeMountpoints)
+  } catch (error) {
+    console.error('Error fetching or filtering mountpoints:', error)
+  }
+}
+fetchAndFilterMountpoints()
+
+// Example #4 - Graceful Error Handling
+async function fetchWithGracefulErrorHandling() {
+  try {
+    const mountpoints = await ntripSourcetableParser(options)
+    console.log('Successfully fetched mountpoints:', mountpoints)
+  } catch (error) {
+    if (error.message.includes('network')) {
+      console.error('Network error occurred. Please check your connection.')
+    } else {
+      console.error('An unexpected error occurred:', error)
+    }
+  }
+}
+fetchWithGracefulErrorHandling()
+
+// Example #5 - Chaining Multiple Async Calls
+async function fetchAndProcessMountpoints() {
+  try {
+    const mountpoints = await ntripSourcetableParser(options)
+    const processedMountpoints = mountpoints.map((mp) => ({
+      ...mp,
+      description: `${mp.mountpoint} (${mp.country})`,
+    }))
+    console.log('Processed mountpoints:', processedMountpoints)
+  } catch (error) {
+    console.error('Error processing mountpoints:', error)
+  }
+}
+fetchAndProcessMountpoints()
+
+// Example #6 - Using with Custom Configuration
+async function fetchWithCustomConfig() {
+  const customOptions = {
+    host: 'example-rtk-caster.com',
+    port: 8080,
+    username: 'user',
+    password: 'pass',
+    position: { lat: 40.7128, lon: -74.006 },
+    version: '2.0',
+  }
+
+  try {
+    const mountpoints = await ntripSourcetableParser(customOptions)
+    console.log('Mountpoints from custom caster:', mountpoints)
+  } catch (error) {
+    console.error('Error fetching from custom caster:', error)
+  }
+}
+fetchWithCustomConfig()
 ```
 
 📘 Mountpoint Interface
+
 ```ts
 export interface Mountpoint {
-  mountpoint: string;
-  format: string;
-  formatDetails: string;
-  carrier: string;
-  navSystem: string;
-  network: string;
-  country: string;
-  latitude: number;
-  longitude: number;
-  nmea: boolean;
-  authentication: boolean;
-  fee: boolean;
-  bitrate: number;
+  mountpoint: string
+  format: string
+  formatDetails: string
+  carrier: string
+  navSystem: string
+  network: string
+  country: string
+  latitude: number
+  longitude: number
+  nmea: boolean
+  authentication: boolean
+  fee: boolean
+  bitrate: number
 }
 ```
 
 🛠 Build & Docs
+
 ```bash
 npm install
 npm run build       # Compile TypeScript
