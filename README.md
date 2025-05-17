@@ -114,30 +114,12 @@ async function fetchWithCustomConfig() {
 fetchWithCustomConfig()
 ```
 
-📘 Mountpoint Interface
-
-```ts
-export interface Mountpoint {
-  mountpoint: string
-  format: string
-  formatDetails: string
-  carrier: string
-  navSystem: string
-  network: string
-  country: string
-  latitude: number
-  longitude: number
-  nmea: boolean
-  authentication: boolean
-  fee: boolean
-  bitrate: number
-}
-```
-
 🛠 Build & Docs
 
 ```bash
 npm install
-npm run build       # Compile TypeScript
-npm run docs        # Generate documentation in ./docs
+npm run build         # Compile TypeScript
+npm run docs          # Generate documentation in ./docs
+npm run test          # Test
+npm run test:coverage # Test with Coverage
 ```

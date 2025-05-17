@@ -1,17 +1,18 @@
-name: Deploy Docs to GitHub Pages
+name: Unit Test and Deploy GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-      - gh-pages
+    branches: [main, 'feature/**', 'bugfix/**', 'hotfix/**']
     paths:
       - 'src/**'
       - 'typedoc.json'
       - 'docs/**'
+      - 'coverage/**'
+  pull_request:
+    branches: [main]
 
 jobs:
-  build-and-deploy:
+  build-test-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,8 +27,17 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Clean Docs/ Directory
+      - name: Clean docs/ and coverage/ Directory
         run: rm -rf docs/
+
+      - name: Run Tests with Coverage
+        run: npm run test:coverage
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
 
       - name: Build Docs with TypeDoc
         run: npm run docs

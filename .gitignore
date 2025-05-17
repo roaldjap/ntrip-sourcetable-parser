@@ -24,3 +24,7 @@ Thumbs.db
 # IDE settings
 .vscode/
 .idea/
+
+# jest Coverage reports
+coverage/
+
