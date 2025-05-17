@@ -1,4 +1,5 @@
 import * as http from 'http'
+import { sanitizeHost } from './helpers'
 import { Mountpoint, NtripConfig } from './types'
 
 /**
@@ -35,13 +36,8 @@ function parseSourcetable(data: string): Mountpoint[] {
 /**
  * Fetches and parses the sourcetable from an NTRIP caster.
  *
- * @param host - NTRIP caster hostname
- * @param port - NTRIP caster port
- * @param username - Optional: username for authentication
- * @param password - Optional: password for authentication
- * @param position - Optional: position for VRS in the format { lat, lon }
- * @param version - Optional: NTRIP version (default: "2.0", can be set to "1.0")
- * @returns Promise resolving to a list of mountpoints
+ * @param options - Configuration options for the parser (see NtripConfig)
+ * @returns Promise resolving to a list of mountpoints (see Mountpoint)
  */
 export function ntripSourcetableParser(
   options: NtripConfig
@@ -59,6 +55,8 @@ export function ntripSourcetableParser(
       new Error('NTRIP port is required and must be a number.')
     )
   }
+
+  options.host = sanitizeHost(host)
 
   return new Promise((resolve, reject) => {
     const headers: Record<string, string> = {
@@ -106,3 +104,7 @@ export function ntripSourcetableParser(
     req.end()
   })
 }
+
+// Include to docs
+export * from './helpers'
+export * from './types'
