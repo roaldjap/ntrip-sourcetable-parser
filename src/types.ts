@@ -1,47 +1,50 @@
 /**
  * GNSS mountpoint information parsed from an NTRIP sourcetable.
  *
- * @property mountpoint   - Name of the mountpoint
- * @property format       - Format (e.g. RTCM 3.2)
- * @property formatDetails- List of messages (e.g. 1004(1),1006(10))
- * @property carrier      - Carrier phase information
- * @property navSystem    - Navigation system (e.g. GPS+GLO)
- * @property network      - Network name
- * @property country      - Country code
- * @property latitude     - Latitude in decimal degrees
- * @property longitude    - Longitude in decimal degrees
- * @property nmea         - Whether NMEA is required
- * @property authentication - Whether authentication is required
- * @property fee          - Whether there's a usage fee
- * @property bitrate      - Bitrate in bps
+ * @property mountpoint      - Name of the mountpoint
+ * @property location        - Identifier/location of the mountpoint
+ * @property format          - Format (e.g. RTCM 3.2)
+ * @property formatDetails   - List of messages (e.g. 1004(1),1006(10))
+ * @property carrier         - Carrier phase information
+ * @property navSystem       - Navigation system (e.g. GPS+GLO)
+ * @property network         - Network name
+ * @property country         - Country code
+ * @property latitude        - Latitude in decimal degrees
+ * @property longitude       - Longitude in decimal degrees
+ * @property nmea            - Whether NMEA is required
+ * @property authentication  - Whether authentication is required
+ * @property fee             - Whether there's a usage fee
+ * @property bitrate         - Bitrate in bps
  */
 export interface Mountpoint {
   /** Name of the mountpoint */
-  mountpoint: string
+  mountpoint: string | null
+  /** Identifier/location of the mountpoint */
+  location: string | null
   /** Format (e.g. RTCM 3.2) */
-  format: string
+  format: string | null
   /** List of messages (e.g. 1004(1),1006(10)) */
-  formatDetails: string
+  formatDetails: string | null
   /** Carrier phase information */
-  carrier: string
+  carrier: string | null
   /** Navigation system (e.g. GPS+GLO) */
-  navSystem: string
+  navSystem: string | null
   /** Network name */
-  network: string
+  network: string | null
   /** Country code */
-  country: string
+  country: string | null
   /** Latitude in decimal degrees */
-  latitude: number
+  latitude: number | null
   /** Longitude in decimal degrees */
-  longitude: number
+  longitude: number | null
   /** Whether NMEA is required */
-  nmea: boolean
+  nmea: boolean | null
   /** Whether authentication is required */
-  authentication: boolean
+  authentication: boolean | null
   /** Whether there's a usage fee */
-  fee: boolean
+  fee: boolean | null
   /** Bitrate in bps */
-  bitrate: number
+  bitrate: number | null
 }
 
 /**

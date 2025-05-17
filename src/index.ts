@@ -13,19 +13,20 @@ function parseSourcetable(data: string): Mountpoint[] {
     if (line.startsWith('STR;')) {
       const fields = line.split(';')
       mountpoints.push({
-        mountpoint: fields[1],
-        format: fields[2],
-        formatDetails: fields[3],
-        carrier: fields[4],
-        navSystem: fields[9],
-        network: fields[12],
-        country: fields[13],
-        latitude: parseFloat(fields[14]),
-        longitude: parseFloat(fields[15]),
-        nmea: fields[6] === 'Y',
-        authentication: fields[7] === 'Y',
-        fee: fields[8] === 'Y',
-        bitrate: parseInt(fields[10], 10) || 0,
+        mountpoint: fields[1] || null,
+        location: fields[2] || null,
+        format: fields[3] || null,
+        formatDetails: fields[4] || null,
+        carrier: fields[5] || null,
+        navSystem: fields[6] || null,
+        network: fields[7] || null,
+        country: fields[8] || null,
+        latitude: parseFloat(fields[9]) || null,
+        longitude: parseFloat(fields[10]) || null,
+        nmea: fields[11] === 'Y',
+        authentication: fields[12] === 'Y',
+        fee: fields[13] === 'Y',
+        bitrate: parseInt(fields[14], 10) || null,
       })
     }
   })
