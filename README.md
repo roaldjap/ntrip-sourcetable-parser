@@ -23,7 +23,7 @@
 npm install ntrip-sourcetable-parser
 ```
 
-🚀 Usage & Example
+## 🚀 Usage & Example
 
 ```ts
 import { ntripSourcetableParser } from 'ntrip-sourcetable-parser'
@@ -114,7 +114,7 @@ async function fetchWithCustomConfig() {
 fetchWithCustomConfig()
 ```
 
-🛠 Build & Docs
+## 🛠 Build & Docs
 
 ```bash
 npm install
@@ -123,3 +123,34 @@ npm run docs          # Generate documentation in ./docs
 npm run test          # Test
 npm run test:coverage # Test with Coverage
 ```
+
+## 🤝 Contributing
+
+We welcome contributions! To add a new feature, please use a branch name in the format:
+
+- `feature/{name-of-your-feature}`
+- `bugfix/{name-of-your-feature}`
+
+### Steps to contribute:
+
+1. **Fork the repository** on GitHub.
+2. **Clone your fork** to your local machine:
+   ```bash
+   git clone https://github.com/your-username/ntrip-sourcetable-parser.git
+   ```
+3. **Create a new branch** for your feature / bugfix:
+   ```bash
+   git checkout -b feature/{name-of-your-feature}
+   ```
+4. **Make your changes** and add tests if applicable.
+5. **Run the tests** to ensure everything works:
+   ```bash
+   npm run test
+   ```
+6. **Commit your changes:**
+   ```bash
+   git add .
+   git commit -m "Feature {PR# }: Add <description of your feature>"
+   ```
+7. **Push to your fork**
+8. **Open a Pull Request** on Github and describe your changes
